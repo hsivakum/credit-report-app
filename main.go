@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"login-service-backend-1/controller"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,13 @@ func main() {
 
 func initRoutes() *gin.Engine {
 	router := gin.Default()
+
+	loginController := controller.NewLoginController()
+
+	appGroup := router.Group("/app")
+	{
+		appGroup.POST("/login", loginController.Login)
+	}
 
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "RESOURCE_NOT_FOUND"})
