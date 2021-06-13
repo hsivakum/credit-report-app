@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"login-service-backend-1/controller"
+	"credit-report-service-backend-2/controller"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

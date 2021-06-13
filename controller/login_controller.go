@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"login-service-backend-1/models"
+	"credit-report-service-backend-2/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

@@ -1,4 +1,4 @@
-module login-service-backend-1
+module credit-report-service-backend-2
 
 go 1.16
 
