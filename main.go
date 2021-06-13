@@ -21,7 +21,7 @@ func initRoutes() *gin.Engine {
 	router := gin.Default()
 
 	router.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusNotFound, gin.H{})
+		ctx.JSON(http.StatusNotFound, gin.H{"message": "RESOURCE_NOT_FOUND"})
 	})
 
 	return router
