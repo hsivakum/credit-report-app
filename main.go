@@ -87,6 +87,15 @@ func initRoutes(db *sql.DB) *gin.Engine {
 		questionsGroup.POST("/submit", questionsController.SaveSurveyResults)
 	}
 
+	creditOrderRepository := repository.NewCreditOrderRepository(newDb)
+	creditService := service.NewCreditOrderService(creditOrderRepository)
+	creditController := controller.NewOrderController(creditService)
+
+	orderGroup := appGroup.Group("/order")
+	{
+		orderGroup.POST("", creditController.OrderCredit)
+	}
+
 	router.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "RESOURCE_NOT_FOUND"})
 	})
