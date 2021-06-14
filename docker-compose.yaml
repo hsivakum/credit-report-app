@@ -1,0 +1,54 @@
+version: "3.7"
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    container_name: db
+    environment:
+      MYSQL_DATABASE: 'credit-db'
+      MYSQL_USER: 'credit-user'
+      MYSQL_PASSWORD: 'credit-password'
+      MYSQL_ROOT_PASSWORD: 'credit-master-password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+    networks:
+      - credit_network
+
+  flyway:
+    container_name: migration
+    image: flyway/flyway
+    command: -url=jdbc:mysql://db:3306/credit-db -schemas=credit-db -user=root -password=credit-master-password -connectRetries=60 migrate
+    volumes:
+      - ./database/.:/flyway/sql
+    depends_on:
+      - db
+    networks:
+      - credit_network
+
+  credit-api:
+    image: credit-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: credit-api
+    depends_on:
+      - flyway
+#    env_file:
+#      - docker-compose-api-local.env
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080'
+    networks:
+      - credit_network
+
+networks:
+  credit_network:
+    external: true
+
+volumes:
+  my-db:

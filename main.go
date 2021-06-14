@@ -1,9 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"credit-report-service-backend-2/controller"
+	"database/sql"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,11 +15,33 @@ import (
 func main() {
 	fmt.Printf("hello!")
 
+	err := DB()
+
+	if err != nil {
+		log.Println("unnable to connect db ", err)
+	}
+
 	router := initRoutes()
-	err := router.Run()
+	err = router.Run()
 	if err != nil {
 		fmt.Printf("%+v", fmt.Errorf("error in starting server, %+v", err))
 	}
+}
+
+func DB() error {
+	db, err := sql.Open("mysql", "root:credit-master-password@/credit-db")
+	if err != nil {
+		panic(err)
+	}
+	// See "Important settings" section.
+	db.SetConnMaxLifetime(time.Minute * 3)
+	db.SetMaxOpenConns(10)
+	db.SetMaxIdleConns(10)
+	err = db.Ping()
+	if err != nil {
+		log.Printf("unable to ping db %v", err)
+	}
+	return err
 }
 
 func initRoutes() *gin.Engine {
