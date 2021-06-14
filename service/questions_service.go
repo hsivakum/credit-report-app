@@ -9,10 +9,15 @@ import (
 
 type QuestionsService interface {
 	GetQuestions() (*[]models.QuestionResponse, error)
+	SubmitAnswers(request models.SurveySubmitRequest) error
 }
 
 type questionsService struct {
 	repository repository.QuestionsRepository
+}
+
+func (service questionsService) SubmitAnswers(request models.SurveySubmitRequest) error {
+	return service.repository.SaveSurveyResults(request)
 }
 
 func (service questionsService) GetQuestions() (*[]models.QuestionResponse, error) {

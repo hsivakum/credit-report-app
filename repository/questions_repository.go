@@ -8,6 +8,7 @@ import (
 
 type QuestionsRepository interface {
 	FetchQuestions() ([]models.Question, error)
+	SaveSurveyResults(request models.SurveySubmitRequest) error
 }
 
 type questionsRepository struct {
@@ -15,7 +16,8 @@ type questionsRepository struct {
 }
 
 const (
-	SelectQuestions = "SELECT Q.ID, Q.Question, JSON_ARRAYAGG(JSON_OBJECT('id', A.ID, 'text', A.`Option`)) as `Answers` from Answers A, Questions Q WHERE A.QuestionID = Q.ID GROUP BY Q.ID, Q.Question"
+	SelectQuestions     = "SELECT Q.ID, Q.Question, JSON_ARRAYAGG(JSON_OBJECT('id', A.ID, 'text', A.`Option`)) as `Answers` from Answers A, Questions Q WHERE A.QuestionID = Q.ID GROUP BY Q.ID, Q.Question"
+	InsertSurveyResults = "INSERT INTO UserSurveys(QuestionID, AnswerID, UserID)VALUES(?,?, (SELECT ID from Users where APP_KEY = ? AND USER_ID = ? AND AUTH_TOKEN = ?))"
 )
 
 func (repository questionsRepository) FetchQuestions() ([]models.Question, error) {
@@ -28,6 +30,17 @@ func (repository questionsRepository) FetchQuestions() ([]models.Question, error
 	}
 
 	return questions, nil
+}
+
+func (repository questionsRepository) SaveSurveyResults(request models.SurveySubmitRequest) error {
+	for questionID, answerID := range request.Answer {
+		_, err := repository.db.Exec(InsertSurveyResults, questionID, answerID, request.AppKey, request.ClientKey, request.AuthToken)
+		if err != nil {
+			log.Println("unable to store survey results")
+			return err
+		}
+	}
+	return nil
 }
 
 func NewQuestionsRepository(db *sqlx.DB) QuestionsRepository {

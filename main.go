@@ -84,6 +84,7 @@ func initRoutes(db *sql.DB) *gin.Engine {
 	questionsGroup := appGroup.Group("/questions")
 	{
 		questionsGroup.GET("", questionsController.GetQuestions)
+		questionsGroup.POST("/submit", questionsController.SaveSurveyResults)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) {
