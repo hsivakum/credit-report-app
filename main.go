@@ -5,8 +5,11 @@ import (
 	"credit-report-service-backend-2/db_helper"
 	"credit-report-service-backend-2/repository"
 	"credit-report-service-backend-2/service"
+	"credit-report-service-backend-2/validators"
 	"database/sql"
 	"fmt"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
@@ -25,6 +28,12 @@ func main() {
 	}
 
 	router := initRoutes(db)
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		_ = v.RegisterValidation("ValidSSN", validators.ValidSSN)
+		_ = v.RegisterValidation("ValidDOB", validators.ValidDOB)
+	}
+
 	err = router.Run()
 	if err != nil {
 		fmt.Printf("%+v", fmt.Errorf("error in starting server, %+v", err))

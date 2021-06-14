@@ -1,12 +1,14 @@
 package repository
 
 import (
+	"credit-report-service-backend-2/models"
+	"credit-report-service-backend-2/utils/time"
 	"database/sql"
 	"log"
 )
 
 type RegistrationRepository interface {
-	CreateUser(email, password string) error
+	CreateUser(request models.CreateUserRequest, userId, authToken string) error
 }
 
 type registrationRepository struct {
@@ -14,11 +16,12 @@ type registrationRepository struct {
 }
 
 const (
-	InsertUser = "INSERT INTO Users(EMAIL, PASSWORD) VALUES (?, SHA1(?))"
+	InsertUser = "INSERT INTO Users(APP_KEY, USER_ID, FIRSTNAME, LASTNAME, DOB, SSN, STATE, STREET, CITY, ZIP, AUTH_TOKEN) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 )
 
-func (repository registrationRepository) CreateUser(email, password string) error {
-	_, err := repository.db.Exec(InsertUser, email, password)
+func (repository registrationRepository) CreateUser(request models.CreateUserRequest, userId, authToken string) error {
+	address := request.Address
+	_, err := repository.db.Exec(InsertUser, request.AppKey, userId, request.FirstName, request.LastName, time.GetTimeFromString(request.DOB), request.SSN, address.State, address.State, address.City, address.Zip, authToken)
 
 	if err != nil {
 		log.Printf("unable to create user")

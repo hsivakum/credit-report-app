@@ -22,7 +22,7 @@ func (controller registrationController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	err = controller.service.CreateUser(createUserRequest.Email, createUserRequest.Email)
+	response, err := controller.service.CreateUser(createUserRequest)
 
 	if err != nil {
 		log.Printf("unable to create user %v", err)
@@ -30,7 +30,7 @@ func (controller registrationController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	sendMessageWithStatus(ctx, http.StatusOK, "user created")
+	ctx.JSON(http.StatusOK, response)
 }
 
 func NewRegistrationService(registrationService service.RegistrationService) *registrationController {
