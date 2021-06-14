@@ -2,6 +2,8 @@ package main
 
 import (
 	"credit-report-service-backend-2/controller"
+	"credit-report-service-backend-2/repository"
+	"credit-report-service-backend-2/service"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
@@ -15,20 +17,20 @@ import (
 func main() {
 	fmt.Printf("hello!")
 
-	err := DB()
+	db, err := DB()
 
 	if err != nil {
 		log.Println("unnable to connect db ", err)
 	}
 
-	router := initRoutes()
+	router := initRoutes(db)
 	err = router.Run()
 	if err != nil {
 		fmt.Printf("%+v", fmt.Errorf("error in starting server, %+v", err))
 	}
 }
 
-func DB() error {
+func DB() (*sql.DB, error) {
 	db, err := sql.Open("mysql", "root:credit-master-password@/credit-db")
 	if err != nil {
 		panic(err)
@@ -41,10 +43,10 @@ func DB() error {
 	if err != nil {
 		log.Printf("unable to ping db %v", err)
 	}
-	return err
+	return db, err
 }
 
-func initRoutes() *gin.Engine {
+func initRoutes(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 
 	loginController := controller.NewLoginController()
@@ -52,6 +54,15 @@ func initRoutes() *gin.Engine {
 	appGroup := router.Group("/app")
 	{
 		appGroup.POST("/login", loginController.Login)
+	}
+
+	registrationRepository := repository.NewRegistrationRepository(db)
+	registrationService := service.NewRegistrationService(registrationRepository)
+	registrationController := controller.NewRegistrationService(registrationService)
+
+	registrationGroup := appGroup.Group("/register")
+	{
+		registrationGroup.POST("", registrationController.CreateUser)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) {
