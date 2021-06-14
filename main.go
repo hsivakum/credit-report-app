@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"net/http"
 	"time"
@@ -74,6 +75,15 @@ func initRoutes(db *sql.DB) *gin.Engine {
 	registrationGroup := appGroup.Group("/register")
 	{
 		registrationGroup.POST("", registrationController.CreateUser)
+	}
+	newDb := sqlx.NewDb(db, "mysql")
+	questionsRepository := repository.NewQuestionsRepository(newDb)
+	questionsService := service.NewQuestionsService(questionsRepository)
+	questionsController := controller.NewQuestionsController(questionsService)
+
+	questionsGroup := appGroup.Group("/questions")
+	{
+		questionsGroup.GET("", questionsController.GetQuestions)
 	}
 
 	router.NoRoute(func(ctx *gin.Context) {
