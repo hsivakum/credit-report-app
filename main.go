@@ -2,6 +2,7 @@ package main
 
 import (
 	"credit-report-service-backend-2/controller"
+	"credit-report-service-backend-2/db_helper"
 	"credit-report-service-backend-2/repository"
 	"credit-report-service-backend-2/service"
 	"database/sql"
@@ -31,8 +32,9 @@ func main() {
 }
 
 func DB() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:credit-master-password@/credit-db")
+	db, err := sql.Open("mysql", db_helper.BuildConnectionString())
 	if err != nil {
+		log.Println("unable to open db")
 		panic(err)
 	}
 	// See "Important settings" section.

@@ -37,8 +37,8 @@ services:
     container_name: credit-api
     depends_on:
       - flyway
-#    env_file:
-#      - docker-compose-api-local.env
+    env_file:
+      - docker-compose-api-local.env
     ports:
       - '8080:8080'
     expose:
