@@ -6,8 +6,8 @@ import (
 	"credit-report-service-backend-2/utils"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"log"
-	"os/exec"
 	"strings"
 )
 
@@ -20,16 +20,12 @@ type registrationService struct {
 }
 
 func (service registrationService) CreateUser(request models.CreateUserRequest) (*models.CreateUserResponse, error) {
-	out, err := exec.Command("uuidgen").Output()
-	if err != nil {
-		log.Println("unable to create uuid")
-		return nil, errors.New("unable to create uuid")
-	}
+	out := uuid.New()
 	clientKey := utils.RandStringBytes(27)
-	authToken := strings.ToUpper(string(out))
+	authToken := strings.ToUpper(out.String())
 
 	fmt.Print("this is auth token", authToken)
-	err = service.repository.CreateUser(request, clientKey, authToken)
+	err := service.repository.CreateUser(request, clientKey, authToken)
 	if err != nil {
 		log.Printf("error while creating user %v", err)
 		return nil, errors.New("something went wrong")

@@ -360,7 +360,7 @@ const OrderReport = () => {
         {
           reportKey ? (
             <div>
-              <label>Display token: </label>
+              <label>Report token: </label>
               <p>{reportKey}</p>
             </div>
           ) : null

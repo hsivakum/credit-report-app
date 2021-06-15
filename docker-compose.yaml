@@ -58,6 +58,8 @@ services:
       - /usr/app/node_modules
     depends_on:
       - credit-api
+    networks:
+      - credit_network
     ports:
       - "3000:3000"
 networks:

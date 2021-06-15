@@ -1,0 +1,13 @@
+node_modules
+build
+.git
+.ipynb_checkpoints
+notebooks
+unused
+Dockerfile
+.DS_Store
+.gitignore
+README.md
+env.*
+devop
+ui-web/node_modules
