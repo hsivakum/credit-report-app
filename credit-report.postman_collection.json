@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "ece75107-aec0-46b9-b062-78b523c1f68f",
+		"name": "credit-report",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"appKey\": \"3F03D20E-5311-43D8-8A76-E4B5D77793BD\",\n  \"firstName\": \"Thomas\",\n  \"lastName\": \"Friedman\",\n  \"ssn\": \"666234390\",\n  \"dob\": \"1975-01-01\",\n  \"address\": {\n    \"state\": \"CO\",\n    \"street\": \"535 30 RD A\",\n    \"city\": \"Grand Junction\",\n    \"zip\": \"81504\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/app/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"app",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get questions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submit survey",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "credit order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"clientKey\": \"86KLkIZ0PYkL28LTlsVqMNTZyLK\",\n    \"productCode\": \"some_code\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/app/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"app",
+						"order"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
