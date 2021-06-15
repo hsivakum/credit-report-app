@@ -46,6 +46,20 @@ services:
     networks:
       - credit_network
 
+  ui-web-app:
+    image: ui-web-app
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    container_name: ui-web-app
+    command: yarn start
+    volumes:
+      - ./ui-web/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - credit-api
+    ports:
+      - "3000:3000"
 networks:
   credit_network:
     external: true

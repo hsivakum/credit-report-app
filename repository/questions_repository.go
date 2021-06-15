@@ -36,7 +36,7 @@ func (repository questionsRepository) SaveSurveyResults(request models.SurveySub
 	for questionID, answerID := range request.Answer {
 		_, err := repository.db.Exec(InsertSurveyResults, questionID, answerID, request.AppKey, request.ClientKey, request.AuthToken)
 		if err != nil {
-			log.Println("unable to store survey results")
+			log.Printf("unable to store survey results %+v", err)
 			return err
 		}
 	}

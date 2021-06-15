@@ -8,6 +8,7 @@ import (
 	"credit-report-service-backend-2/validators"
 	"database/sql"
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
@@ -60,6 +61,14 @@ func DB() (*sql.DB, error) {
 
 func initRoutes(db *sql.DB) *gin.Engine {
 	router := gin.Default()
+
+	corsConfig := cors.Config{
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:3001"},
+		AllowMethods: []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders: []string{"*"},
+	}
+	router.Use(cors.New(corsConfig))
+
 
 	loginController := controller.NewLoginController()
 
